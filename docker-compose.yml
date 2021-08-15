@@ -1,0 +1,60 @@
+version: "3"
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: kubik_metatagable
+    ports:
+      - "5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+  web:
+    tty: true
+    stdin_open: true
+    build: .
+    command: bash
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: kubik_metatagable
+      DATABASE_URL: postgres://postgres@db
+      WEBPACKER_DEV_SERVER_HOST: webpack
+      REDIS_URL: 'redis://redis:6379'
+      LOCAL_HOST: ${LOCAL_HOST}
+      SELENIUM_HOST: selenium
+      SELENIUM_PORT: 4444
+      TEST_APP_HOST: web
+      TEST_PORT: 3001
+      HUB_URL: http://selenium:4444/wd/hub
+    volumes:
+      - .:/kubik_metatagable
+      - ${SSH_PATH}:/home/.ssh
+      - ./.docker/database.yml.docker:/kubik_metatagable/test/dummy/config/database.yml
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    depends_on:
+      - db
+      - selenium
+  selenium:
+    image: selenium/standalone-chrome-debug
+    ports:
+      - "4444:4444"
+  webpack:
+    build: .
+    #command: ./bin/webpack-dev-server
+    volumes:
+      - .:/kubik_metatagable
+      - ./.docker/database.yml.docker:/kubik_metatagable/test/dummy/config/database.yml
+    ports:
+      - '3035:3035'
+    environment:
+      NODE_ENV: development
+      RAILS_ENV: development
+      WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
+volumes:
+  dbdata:
+

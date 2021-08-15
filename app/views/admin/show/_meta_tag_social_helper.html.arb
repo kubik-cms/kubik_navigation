@@ -1,0 +1,9 @@
+attributes_table_for object.meta_tag do
+  row :og_title
+  row :og_description
+  row :og_image
+  row :twitter_title
+  row :twitter_description
+  row :twitter_media
+  row :twitter_card_type
+end
