@@ -1,0 +1,31 @@
+<div data-controller='navigation-selector'
+     data-navigation-selector-resource-source-url-value='<%= get_resources_admin_kubik_navigation_items_url(format: :json) %>'
+>
+
+  <%= semantic_form_for @resource, url: admin_kubik_navigation_items_path do |f| %>
+    <template data-navigation-selector-target='resourceFieldsTemplate'>
+      <%= f.inputs "Resource setup" do %>
+        <%= f.input :resource_type, as: :select, collection: Kubik::NavigableResources.instance.select_collection, input_html: { data: { action: 'change->navigation-selector#resourceTypeChange' } } %>
+        <%= f.input :resource_id, as: :select, collection: [], input_html: { data: { 'navigation-selector-target': 'resourceCollectionSelect' }, disabled: true } %>
+      <% end %>
+    </template>
+    <%= f.input :parent_id, as: :hidden, value: @resource.parent_id %>
+    <%= f.inputs "Item type" do %>
+      <%= f.input :item_type, as: :select, collection: Kubik::Navigable::ITEM_TYPES, input_html: { data: { action: 'change->navigation-selector#itemTypeChange' } } %>
+    <% end %>
+    <div data-navigation-selector-target='fieldsContainer'>
+    </div>
+    <%= f.inputs "Item look" do %>
+      <%= f.input :text %>
+      <%= f.input :title %>
+      <%= f.input :description %>
+      <%= f.input :slug, input_html: { disabled: true } %>
+    <% end %>
+    <%= f.inputs "Item advanced settings" do %>
+      <%= f.input :custom_class %>
+      <%= f.input :custom_id %>
+      <%= f.input :config_setup %>
+    <% end %>
+    <%= f.actions %>
+  <% end %>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_10_082507) do
+ActiveRecord::Schema.define(version: 2022_03_15_212131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,18 @@ ActiveRecord::Schema.define(version: 2021_06_10_082507) do
     t.string "metatagable_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "kubik_navigation_items", force: :cascade do |t|
+    t.string "ancestry"
+    t.string "uri"
+    t.string "controller"
+    t.string "action"
+    t.text "params"
+    t.string "item_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ancestry"], name: "index_kubik_navigation_items_on_ancestry"
   end
 
 end

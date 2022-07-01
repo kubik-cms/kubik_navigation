@@ -1,0 +1,22 @@
+<div>
+  <% Kubik::NavigationItem.roots.each do |root| %>
+    <ul>
+      <li>
+        <div>
+          <%= root.title %>,
+          <%= link_to 'Add child', new_admin_kubik_navigation_item_path(parent_id: root.id) %>
+          <ul>
+            <% root.children.each do |node| %>
+              <li>
+                <div>
+                  <%= node.title %>,
+                  <%= link_to 'Add child', new_admin_kubik_navigation_item_path(parent_id: node.id) %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  <% end %>
+</div>

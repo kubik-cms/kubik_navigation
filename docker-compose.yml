@@ -1,12 +1,31 @@
 version: "3"
 services:
+  source:
+   build:
+     contenxt: .
+     dockerfile: Dockerfile
+   volumes:
+     - ./:/kubik_media_library
+   env_file: ./.env
+   tty: true
+   stdin_open: true
+   build: .
+   command: yarn watch
+   ports:
+     - "8080:8080"
+   environment:
+     RAILS_ENV: test
+   depends_on:
+     - db
+   networks:
+     - development
   db:
     image: postgres
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
-      POSTGRES_DB: kubik_metatagable
+      POSTGRES_DB: kubik_navigation
     ports:
       - "5432"
     volumes:
@@ -19,7 +38,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
-      POSTGRES_DB: kubik_metatagable
+      POSTGRES_DB: kubik_navigation
       DATABASE_URL: postgres://postgres@db
       WEBPACKER_DEV_SERVER_HOST: webpack
       REDIS_URL: 'redis://redis:6379'
@@ -29,10 +48,12 @@ services:
       TEST_APP_HOST: web
       TEST_PORT: 3001
       HUB_URL: http://selenium:4444/wd/hub
+    network:
+      - development
     volumes:
-      - .:/kubik_metatagable
+      - .:/kubik_navigation
       - ${SSH_PATH}:/home/.ssh
-      - ./.docker/database.yml.docker:/kubik_metatagable/test/dummy/config/database.yml
+      - ./.docker/database.yml.docker:/kubik_navigation/test/dummy/config/database.yml
     ports:
       - "3000:3000"
       - "3001:3001"
@@ -47,8 +68,8 @@ services:
     build: .
     #command: ./bin/webpack-dev-server
     volumes:
-      - .:/kubik_metatagable
-      - ./.docker/database.yml.docker:/kubik_metatagable/test/dummy/config/database.yml
+      - .:/kubik_navigation
+      - ./.docker/database.yml.docker:/kubik_navigation/test/dummy/config/database.yml
     ports:
       - '3035:3035'
     environment:
@@ -57,4 +78,3 @@ services:
       WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
 volumes:
   dbdata:
-

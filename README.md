@@ -1,4 +1,4 @@
-# KubikMetatgable
+# KubikNavigation
 
 Gem adding basic metatags configuration to Kubik projects.
 
@@ -8,7 +8,7 @@ Gem adding basic metatags configuration to Kubik projects.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'kubik_previewable'
+gem 'kubik_navigation'
 ```
 
 And then execute:
@@ -17,86 +17,13 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install kubik_previewable
+    $ gem install kubik_navigation
 
 ## Usage
 
-### Basic setup
-In your metatagable model add:
-
-```
-include ::Kubik::KubikMetatagable
-kubik_metatagable
-```
-
-The basic functionality can be extended with default values for title and descriptions by passing additional settings to `kubik_metatagable`.
-
-```
-kubik_metatagable(
-  defaults: true,
-  title: ->(e) { e.dummy_title },
-  description: ->(e) { e.dummy_description }
-)
-
-```
 
 
 ### ActiveAdmin setup
-Your ActiveAdmin requires addtional allowed attributes on model setup:
-
-```
-permit_params do
-  params = %i[
-    your_regular_params
-  ]
-  ::Kubik::PermitAdditionalAdminParams.push_to_params(Example, params)
-  params
-end
-```
-
-Then you should add additional fileds to form setup:
-
-```
-  form do |f|
-    tabs do
-      tab "Content" do
-        inputs do
-          input :dummy_title
-          input :dummy_description
-        end
-      end
-      tab "SEO" do
-        render "admin/form/meta_tag_seo_helper", f: f
-      end
-      tab "Social Media" do
-        render "admin/form/meta_tag_social_helper", f: f
-      end
-    end
-    f.actions
-  end
-```
-
-And you can add similar setup to show action:
-
-
-```
-  show do |example|
-    tabs do
-      tab "Content" do
-        attributes_table do
-          row :dummy_title
-          row :dummy_description
-        end
-      end
-      tab "SEO" do
-        render "admin/show/meta_tag_seo_helper", object: example
-      end
-      tab "Social Media" do
-        render "admin/show/meta_tag_social_helper", object: example
-      end
-    end
-  end
-```
 
 ## Development
 

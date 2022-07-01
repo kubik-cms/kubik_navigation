@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in kubik_previewable.gemspec
+# Specify your gem's dependencies in kubik_navigation.gemspec
 gemspec
 
 gem "rake", "~> 13.0"

@@ -1,5 +1,0 @@
-# frozen_string_literal: true
-
-gem "devise"
-gem "kubik_metatagable"
-gem "rails"

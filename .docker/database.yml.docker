@@ -17,12 +17,12 @@ development:
 
 test:
   <<: *default
-  database: kubik_metatagable_test
+  database: kubik_navigation_test
 
 staging:
   <<: *default
-  database: kubik_metatagable_staging
+  database: kubik_navigation_staging
 
 production:
   <<: *default
-  database: kubik_metatagable_production
+  database: kubik_navigation_production

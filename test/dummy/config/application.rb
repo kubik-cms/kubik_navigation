@@ -14,7 +14,7 @@ module Dummy
     config.load_defaults Rails::VERSION::STRING.to_f
     config.autoload_paths += Dir[Rails.root.join('../../app/models/**/').to_s]
     config.autoload_paths += Dir[Rails.root.join('../../app/controllers/kubik/**/').to_s]
-    config.autoload_paths += Dir[Rails.root.join('../../lib/kubik_metatagable').to_s]
+    config.autoload_paths += Dir[Rails.root.join('../../lib/kubik_navigation').to_s]
     config.paths["app/views"].unshift(Rails.root.join('../../app/views/').to_s)
 
     # Configuration for the application, engines, and railties goes here.
