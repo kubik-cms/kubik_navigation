@@ -1,4 +1,4 @@
-<%= semantic_form_for @resource, url: admin_kubik_navigation_items_path do |f| %>
+<%= semantic_form_for @resource, url: admin_kubik_navigation_items_path, html: { data: { turbo: false } } do |f| %>
   <%= f.inputs "Basic information" do %>
     <%= f.input :title %>
   <% end %>

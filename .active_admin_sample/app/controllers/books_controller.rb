@@ -1,6 +1,7 @@
 class BooksController < ApplicationController
   def index
-    @books = Book.all
+    scope = params[:scope].present? ? params[:scope].to_sym : :all
+    @books = Book.send(scope)
   end
 
   def show

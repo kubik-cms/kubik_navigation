@@ -1,22 +1,7 @@
-<div>
+<div class='kubik-navigation-tree-container'>
   <% Kubik::NavigationItem.roots.each do |root| %>
-    <ul>
-      <li>
-        <div>
-          <%= root.title %>,
-          <%= link_to 'Add child', new_admin_kubik_navigation_item_path(parent_id: root.id) %>
-          <ul>
-            <% root.children.each do |node| %>
-              <li>
-                <div>
-                  <%= node.title %>,
-                  <%= link_to 'Add child', new_admin_kubik_navigation_item_path(parent_id: node.id) %>
-                </div>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      </li>
+    <ul class='kubik-navigation-list'>
+      <%= render partial: 'admin/kubik/navigation_items/node', locals: { node: root, root: root } %>
     </ul>
   <% end %>
 </div>

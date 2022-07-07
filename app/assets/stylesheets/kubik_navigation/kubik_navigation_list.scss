@@ -1,0 +1,89 @@
+.kubik-navigation-tree-container {
+  padding: 0 1rem;
+}
+.kubik-navigation-list {
+  list-style-type: none;
+  padding-left: 0;
+
+  &-node {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .25rem;
+    background: var(--kubik-interface-color-white);
+    border: 1px solid var(--kubik-interface-color-grey-200);
+    border-radius: 3px;
+
+    &-title {
+      @include kubik-typography-h4;
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      margin: 0;
+      padding: 1rem;
+      a {
+        color: var(--kubik-interface-color-brand-400);
+      }
+      &-icon.material-symbols-outlined {
+        margin-right: .5rem;
+        font-size: 1rem;
+        position: relative;
+        bottom: 1px;
+        color: var(--kubik-interface-color-grey-300);
+      }
+    }
+    &-uri {
+      @include kubik-typography-para--small;
+      display: block;
+    }
+    &-actions {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+    }
+
+    &-info {
+      display: flex;
+      flex-direction: row;
+    }
+
+    &-action {
+      @include kubik-link-title;
+      margin: 0 1.2rem;
+    }
+    &-action__primary {
+      @include kubik-action-button;
+      display: flex;
+      align-items: center;
+      padding-left: .75rem;
+      &-icon {
+        position: relative;
+        bottom: 2px;
+      }
+    }
+    &-handle {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+      padding: 0 .75rem;
+      border-right: 1px solid var(--kubik-interface-color-grey-200);
+      i {
+        color: var(--kubik-interface-color-grey-200);
+      }
+    }
+    &-type {
+      @include kubik-typography-para--small;
+      display: flex;
+      align-items: center;
+      color: var(--kubik-interface-color-grey-400);
+    }
+    &-ghost {
+      border-radius: 3px;
+      background: var(--kubik-interface-color-brand-300);
+      & > div { opacity: 0.2; }
+    }
+  }
+  .kubik-navigation-list {
+    padding-left: 3.2rem;
+  }
+}

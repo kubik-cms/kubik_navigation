@@ -17,6 +17,11 @@ class CreateKubikNavigationItems < ActiveRecord::Migration[5.1]
       t.string   :custom_class
       t.string   :custom_id
       t.string   :config_setup
+      t.string   :resource_type
+      t.boolean  :open_in_new_window, default: false
+      t.integer  :position
+      t.string   :rel_attribute
+      t.string   :link_location
 
       t.timestamps
     end

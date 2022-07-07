@@ -5,7 +5,7 @@ module Kubik
   module Navigable
     include ActiveSupport::Concern
 
-    ITEM_TYPES = [:resource, :link, :header, :redirect]
+    ITEM_TYPES = [:resource, :link, :header, :node]
     def self.included(klass)
       klass.extend(ClassMethods)
     end
@@ -16,7 +16,8 @@ module Kubik
         options = {
           class_name: name,
           controller: name.tableize,
-          resource_title: name.titleize
+          resource_title: name.titleize,
+          scope: []
         }.merge(opts)
         Kubik::NavigableResources.instance.navigable_resources.add(options)
       end

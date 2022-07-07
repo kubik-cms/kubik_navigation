@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_30_220006) do
+ActiveRecord::Schema.define(version: 2022_07_05_232646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,11 @@ ActiveRecord::Schema.define(version: 2022_06_30_220006) do
     t.string "custom_class"
     t.string "custom_id"
     t.string "config_setup"
+    t.string "resource_type"
+    t.boolean "open_in_new_window", default: false
+    t.integer "position"
+    t.string "rel_attribute"
+    t.string "link_location"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ancestry"], name: "index_kubik_navigation_items_on_ancestry"

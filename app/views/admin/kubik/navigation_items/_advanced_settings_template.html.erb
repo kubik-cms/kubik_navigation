@@ -1,0 +1,10 @@
+<template data-navigation-selector-target='advancedSettingsTemplate'>
+  <%= f.inputs "Item advanced settings", data: { 'navigation-selector-target': 'itemAdvancedWrapper' } do %>
+    <%= f.input :open_in_new_window %>
+    <%= f.input :custom_class %>
+    <%= f.input :custom_id, label: 'Custom ID' %>
+    <%= f.input :config_setup %>
+    <%= f.input :rel_attribute %>
+  <% end %>
+</template>
+

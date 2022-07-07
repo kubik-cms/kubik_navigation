@@ -1,0 +1,19 @@
+<template data-navigation-selector-target='headerTemplate'>
+  <%= f.inputs "Item look", data: { 'navigation-selector-target': 'itemLookWrapper' } do %>
+    <%= f.input :title,
+      input_html: {
+        data: {
+          'navigation-selector-target': 'linkTitle'
+        }
+      }
+    %>
+    <%= f.input :text,
+      input_html: {
+        data: {
+          'navigation-selector-target': 'linkText'
+        }
+      }
+    %>
+    <%= f.input :description %>
+  <% end %>
+</template>

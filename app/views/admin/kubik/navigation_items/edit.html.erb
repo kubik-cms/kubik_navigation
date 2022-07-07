@@ -9,7 +9,8 @@
      data-navigation-selector-new-record-value='<%= @resource.new_record? %>'
 >
 
-<%= semantic_form_for @resource, url: admin_kubik_navigation_items_path, html: { data: { turbo: false } } do |f| %>
+<%= semantic_form_for @resource, url: admin_kubik_navigation_item_path(@resource), html: { data: { turbo: false } } do |f| %>
   <%= render 'admin/kubik/navigation_items/form', f: f %>
 <% end %>
 </div>
+

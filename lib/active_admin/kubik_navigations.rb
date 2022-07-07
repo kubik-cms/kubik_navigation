@@ -4,7 +4,10 @@ ActiveAdmin.register Kubik::NavigationItem do
   config.filters = false
 
   permit_params do
-    params = [:title, :item_type, :text, :description, :uri, :parent_id, :slug, :resource_type, :custom_class, :custom_id, :config_setup]
+    params = [:title, :item_type, :text, :description, :uri,
+              :parent_id, :slug, :resource_type, :custom_class,
+              :custom_id, :config_setup, :resource_id, :open_in_new_window,
+              :link_location, :rel_attribute]
     params
   end
 
@@ -21,16 +24,24 @@ ActiveAdmin.register Kubik::NavigationItem do
 
   collection_action :get_resources, method: :get do
     klass = params[:resource_type].classify.constantize
-    scope = params[:resource_scope].present? ? params[:resource_scopr].to_sym : :all
+    scope = params[:resource_scope].present? ? params[:resource_scope].to_sym : :all
     if Object.const_defined?(klass.name)
       respond_to do |format|
-        format.json { render json: Book.send(scope).as_json(only: [:id, :title]) }
+        format.json { render json: klass.send(scope).as_json(only: [:id, :title]) }
       end
     else
       respond_to do |format|
         format.json status: 522
       end
     end
+  end
+
+  member_action :reorder, method: :patch do
+    resource = Kubik::NavigationItem.find(params[:node_id])
+    resource.parent = Kubik::NavigationItem.find(params[:parent_id])
+    resource.save
+    resource.position = params[:position]
+    resource.save
   end
 
   controller do
@@ -50,6 +61,15 @@ ActiveAdmin.register Kubik::NavigationItem do
       end
     end
 
+    def edit
+      @resource = Kubik::NavigationItem.find(params[:id])
+      if @resource.is_root?
+        render 'admin/kubik/navigation_items/edit_root', layout: 'active_admin'
+      else
+        render 'admin/kubik/navigation_items/edit', layout: 'active_admin'
+      end
+    end
+
     def create
       @resource = params[:parent_id].present? ?
         Kubik::NavigationItem.children_of(params[:parent_id]).new(permitted_params[:navigation_item]) :
@@ -57,9 +77,23 @@ ActiveAdmin.register Kubik::NavigationItem do
       if @resource.save
         redirect_to admin_kubik_navigation_items_path
       else
-        render :new, params: { parent_id: permitted_params[:navigation_item][:parent_id] }
+        render "admin/kubik/navigation_items/new",
+               params: { parent_id: permitted_params[:navigation_item][:parent_id] },
+               layout: "active_admin"
+      end
+    end
+
+    def update
+      @resource = Kubik::NavigationItem.find(params[:id])
+      if @resource.update(permitted_params[:navigation_item])
+        redirect_to admin_kubik_navigation_items_path
+      else
+        if @resource.is_root?
+          render "admin/kubik/navigation_items/edit", layout: "active_admin"
+        else
+          render "admin/kubik/navigation_items/edit", layout: "active_admin"
+        end
       end
     end
   end
-
 end

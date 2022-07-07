@@ -1,0 +1,17 @@
+<template data-navigation-selector-target='resourceSelectionTemplate'>
+  <%= f.inputs "Resource setup" do %>
+    <%= f.input :resource_type, as: :select, collection: Kubik::NavigableResources.instance.select_collection, input_html: { data: { action: 'change->navigation-selector#resourceTypeChange' } } %>
+    <%= f.input :resource_id,
+      as: :select,
+      collection: [],
+      include_blank: false,
+      disabled: true,
+      input_html: {
+        data: {
+          'navigation-selector-target': 'resourceCollectionSelect',
+          action: 'change->navigation-selector#resourceChange'
+        }
+      }
+      %>
+  <% end %>
+</template>
