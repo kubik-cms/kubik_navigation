@@ -19,6 +19,11 @@ module KubikNavigation
         ActiveAdmin.application.load_paths += Dir["#{File.dirname(__FILE__)}/active_admin"]
         ActiveAdmin.application.load_paths += Dir["#{File.dirname(__FILE__)}/active_admin/views"]
       end
+      initializer "local_helper.action_controller" do
+        ActiveSupport.on_load :action_controller do
+          helper ::Kubik::NavigableHelper
+        end
+      end
     end
   end
 end

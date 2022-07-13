@@ -9,11 +9,11 @@ module Kubik
     end
 
     def select_collection
-      @navigable_resources.map { |n| [n[:resource_title], n[:class_name]] }
+      @navigable_resources
     end
 
     def check_nested_item(path)
-      Kubik::NavigationItem.exists?(uri: path, action: 'index')
+      Kubik::NavigationItem.where(uri: path, action: 'index').where("params->>'show_children' = ?", true).exists?
     end
 
     def check_item(path)

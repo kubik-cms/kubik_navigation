@@ -7,7 +7,7 @@ ActiveAdmin.register Kubik::NavigationItem do
     params = [:title, :item_type, :text, :description, :uri,
               :parent_id, :slug, :resource_type, :custom_class,
               :custom_id, :config_setup, :resource_id, :open_in_new_window,
-              :link_location, :rel_attribute]
+              :link_location, :rel_attribute, :nested_routes, :resource_scope]
     params
   end
 
@@ -24,7 +24,7 @@ ActiveAdmin.register Kubik::NavigationItem do
 
   collection_action :get_resources, method: :get do
     klass = params[:resource_type].classify.constantize
-    scope = params[:resource_scope].present? ? params[:resource_scope].to_sym : :all
+    scope = params[:kubik_navigable_scope].present? ? params[:kubik_navigable_scope].to_sym : :all
     if Object.const_defined?(klass.name)
       respond_to do |format|
         format.json { render json: klass.send(scope).as_json(only: [:id, :title]) }

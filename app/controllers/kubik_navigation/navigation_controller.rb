@@ -3,9 +3,7 @@
 module KubikNavigation
   # Navigation module
   class NavigationController < ApplicationController
-
-    def not_found
-    end
+    def not_found; end
 
     def navigate_item
       @navigation_item = Kubik::NavigableResources.instance.find_item(request.params[:slug])

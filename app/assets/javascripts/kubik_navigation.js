@@ -537,13 +537,22 @@ var _stimulus = require("@hotwired/stimulus");
 var _turbo = require("@hotwired/turbo");
 var _navigationSelectorControllerJs = require("./controllers/navigation_selector_controller.js");
 var _navigationSelectorControllerJsDefault = parcelHelpers.interopDefault(_navigationSelectorControllerJs);
+var _activeSelectControllerJs = require("./controllers/active_select_controller.js");
+var _activeSelectControllerJsDefault = parcelHelpers.interopDefault(_activeSelectControllerJs);
 var _dragControllerJs = require("./controllers/drag_controller.js");
 var _dragControllerJsDefault = parcelHelpers.interopDefault(_dragControllerJs);
+var _resourceSetupControllerJs = require("./controllers/resource_setup_controller.js");
+var _resourceSetupControllerJsDefault = parcelHelpers.interopDefault(_resourceSetupControllerJs);
+var _itemSetupControllerJs = require("./controllers/item_setup_controller.js");
+var _itemSetupControllerJsDefault = parcelHelpers.interopDefault(_itemSetupControllerJs);
 window.Stimulus = (0, _stimulus.Application).start();
+Stimulus.register("active-select", (0, _activeSelectControllerJsDefault.default));
 Stimulus.register("navigation-selector", (0, _navigationSelectorControllerJsDefault.default));
+Stimulus.register("resource-setup", (0, _resourceSetupControllerJsDefault.default));
+Stimulus.register("item-setup", (0, _itemSetupControllerJsDefault.default));
 Stimulus.register("drag", (0, _dragControllerJsDefault.default));
 
-},{"@hotwired/stimulus":"hVNih","@hotwired/turbo":"lw7OH","./controllers/navigation_selector_controller.js":"2EvhZ","./controllers/drag_controller.js":"ib9fJ","@parcel/transformer-js/src/esmodule-helpers.js":"5oERU"}],"hVNih":[function(require,module,exports) {
+},{"@hotwired/stimulus":"hVNih","@hotwired/turbo":"lw7OH","./controllers/navigation_selector_controller.js":"2EvhZ","./controllers/drag_controller.js":"ib9fJ","@parcel/transformer-js/src/esmodule-helpers.js":"5oERU","./controllers/active_select_controller.js":"12lnR","./controllers/resource_setup_controller.js":"gyimz","./controllers/item_setup_controller.js":"7U9wg"}],"hVNih":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Application", ()=>Application);
@@ -5532,19 +5541,6 @@ parcelHelpers.export(exports, "default", ()=>_class);
 var _definePropertyMjs = require("@swc/helpers/src/_define_property.mjs");
 var _definePropertyMjsDefault = parcelHelpers.interopDefault(_definePropertyMjs);
 var _stimulus = require("@hotwired/stimulus");
-const _createEmptyOptionElement = function() {
-    const option = document.createElement("option");
-    return option;
-};
-const _createIndexOptionElement = function(label, value) {
-    const option = document.createElement("option");
-    option.text = label;
-    option.value = value;
-    return option;
-};
-const _stringParameterize = function(string) {
-    if (string) return string.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-};
 class _class extends (0, _stimulus.Controller) {
     connect() {
         this._renderResults();
@@ -5553,86 +5549,24 @@ class _class extends (0, _stimulus.Controller) {
         this.fieldsContainerTarget.innerHTML = "";
         switch(this.itemTypeValue){
             case "resource":
-                this.fieldsContainerTarget.innerHTML += this.resourceTypeSelectTemplate;
-                this.fieldsContainerTarget.innerHTML += this.resourceFieldsTemplate;
-                this.fieldsContainerTarget.innerHTML += this.advancedSettingsTemplate;
+                this.fieldsContainerTarget.insertAdjacentHTML("beforeend", this.navTemplate("resourceSelectionTemplate"));
+                this.fieldsContainerTarget.insertAdjacentHTML("beforeend", this.navTemplate("resourceTemplate"));
+                this.fieldsContainerTarget.insertAdjacentHTML("beforeend", this.navTemplate("advancedSettingsTemplate"));
                 break;
             case "header":
-                this.fieldsContainerTarget.innerHTML += this.headerTemplate;
+                this.fieldsContainerTarget.insertAdjacentHTML("beforeend", this.navTemplate("headerTemplate"));
                 break;
             case "link":
-                this.fieldsContainerTarget.innerHTML += this.linkTemplate;
-                this.fieldsContainerTarget.innerHTML += this.advancedSettingsTemplate;
+                this.fieldsContainerTarget.insertAdjacentHTML("beforeend", this.navTemplate("linkTemplate"));
+                this.fieldsContainerTarget.insertAdjacentHTML("beforeend", this.navTemplate("advancedSettingsTemplate"));
                 break;
             case "node":
-                this.fieldsContainerTarget.innerHTML += this.nodeTemplate;
-                break;
-            default:
+                this.fieldsContainerTarget.insertAdjacentHTML("beforeend", this.navTemplate("nodeTemplate"));
                 break;
         }
     }
-    get advancedSettingsTemplate() {
-        return this.advancedSettingsTemplateTarget.innerHTML;
-    }
-    get resourceFieldsTemplate() {
-        return this.resourceTemplateTarget.innerHTML;
-    }
-    get linkTemplate() {
-        return this.linkTemplateTarget.innerHTML;
-    }
-    get headerTemplate() {
-        return this.headerTemplateTarget.innerHTML;
-    }
-    get nodeTemplate() {
-        return this.nodeTemplateTarget.innerHTML;
-    }
-    get resourceTypeSelectTemplate() {
-        return this.resourceSelectionTemplateTarget.innerHTML;
-    }
-    resourceTypeValueChanged() {
-        const url = new URL(this.resourceSourceUrlValue);
-        url.search = new URLSearchParams({
-            resource_type: this.resourceTypeValue
-        }).toString();
-        if (this.resourceTypeValue != "") {
-            this.resourceCollectionSelectTarget.disabled = true;
-            fetch(url, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                }
-            }).then((res)=>res.json()).then((result)=>{
-                result.forEach((r)=>{
-                    const slug = typeof (r.slug == "undefined") ? _stringParameterize(r.title) : r.slug;
-                    this.resourceCollectionSelectTarget.innerHTML += "<option data-item-slug='" + slug + "' value='" + r.id + "'>" + r.title + "</option>";
-                });
-                this.resourceCollectionSelectTarget.insertBefore(_createIndexOptionElement(this.listingOptionLabelValue, this.listingOptionValue), this.resourceCollectionSelectTarget.firstChild);
-                this.resourceCollectionSelectTarget.insertBefore(_createEmptyOptionElement(), this.resourceCollectionSelectTarget.firstChild);
-                if (this.itemActionValue == "index") this.resourceCollectionSelectTarget.value = "__index__";
-                else this.resourceCollectionSelectTarget.value = this.selectedResourceValue.id;
-                this.resourceCollectionSelectTarget.disabled = false;
-            });
-        }
-    }
-    selectedResourceValueChanged() {
-        if (this.newRecordValue && this.selectedResourceValue.name) {
-            let title = "";
-            if (this.selectedResourceValue.name == this.listingOptionLabelValue) {
-                title = "-- " + this.resourceTypeValue + " Listing --";
-                this.linkSlugTarget.readonly = false;
-            } else {
-                title = this.selectedResourceValue.name;
-                this.linkSlugTarget.readonly = true;
-            }
-            this.linkTitleTarget.value = title;
-            this.linkTextTarget.value = title;
-            this.linkSlugTarget.value = _stringParameterize(title);
-        }
-    }
-    resourceTypeChange(e) {
-        this.resourceTypeValue = e.target.value;
-        this.resourceCollectionSelectTarget.disabled = true;
-        this.resourceCollectionSelectTarget.innerHTML = "";
+    navTemplate(template) {
+        return this[template + "Target"].innerHTML;
     }
     itemTypeChange(e) {
         this.itemTypeValue = e.target.value;
@@ -5640,24 +5574,9 @@ class _class extends (0, _stimulus.Controller) {
     itemTypeValueChanged() {
         this._renderResults();
     }
-    resourceChange(e) {
-        const selectedOption = e.target.options[e.target.selectedIndex];
-        this.selectedResourceValue = {
-            name: selectedOption.innerText,
-            id: e.target.value,
-            slug: selectedOption.dataset.slug
-        };
-    }
 }
 (0, _definePropertyMjsDefault.default)(_class, "values", {
-    resourceType: String,
-    itemType: String,
-    itemAction: String,
-    listingOptionLabel: String,
-    listingOption: String,
-    resourceSourceUrl: String,
-    selectedResource: Object,
-    newRecord: Boolean
+    itemType: String
 });
 (0, _definePropertyMjsDefault.default)(_class, "targets", [
     "advancedSettingsTemplate",
@@ -5666,18 +5585,7 @@ class _class extends (0, _stimulus.Controller) {
     "nodeTemplate",
     "resourceSelectionTemplate",
     "resourceTemplate",
-    "resourceTypeSelect",
-    "resourceCollectionSelect",
-    "resourceTypeSelect",
-    "fieldsContainer",
-    "itemLookWrapper",
-    "itemAdvancedWrapper",
-    "linkTitle",
-    "linkText",
-    "linkSlug",
-    "linkLocation",
-    "linkLocationWrapper",
-    "paramsInput"
+    "fieldsContainer", 
 ]);
 
 },{"@swc/helpers/src/_define_property.mjs":"aQ2HO","@hotwired/stimulus":"hVNih","@parcel/transformer-js/src/esmodule-helpers.js":"5oERU"}],"aQ2HO":[function(require,module,exports) {
@@ -5739,7 +5647,7 @@ class _class extends (0, _stimulus.Controller) {
     nodeUpdateUrl: String
 });
 
-},{"@hotwired/stimulus":"hVNih","sortablejs":"jTy8b","@parcel/transformer-js/src/esmodule-helpers.js":"5oERU","@swc/helpers/src/_define_property.mjs":"aQ2HO"}],"jTy8b":[function(require,module,exports) {
+},{"@swc/helpers/src/_define_property.mjs":"aQ2HO","@hotwired/stimulus":"hVNih","sortablejs":"jTy8b","@parcel/transformer-js/src/esmodule-helpers.js":"5oERU"}],"jTy8b":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "MultiDrag", ()=>MultiDragPlugin);
@@ -8242,6 +8150,188 @@ Sortable.mount(new AutoScrollPlugin());
 Sortable.mount(Remove, Revert);
 exports.default = Sortable;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"5oERU"}]},["6Tm31","9vN5r"], "9vN5r", "parcelRequiref0f4")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"5oERU"}],"12lnR":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>_class);
+var _definePropertyMjs = require("@swc/helpers/src/_define_property.mjs");
+var _definePropertyMjsDefault = parcelHelpers.interopDefault(_definePropertyMjs);
+var _stimulus = require("@hotwired/stimulus");
+const csrfToken = document.querySelector("[name='csrf-token']").content;
+class _class extends (0, _stimulus.Controller) {
+    connect() {}
+}
+(0, _definePropertyMjsDefault.default)(_class, "values", {});
+
+},{"@swc/helpers/src/_define_property.mjs":"aQ2HO","@hotwired/stimulus":"hVNih","@parcel/transformer-js/src/esmodule-helpers.js":"5oERU"}],"gyimz":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>_class);
+var _definePropertyMjs = require("@swc/helpers/src/_define_property.mjs");
+var _definePropertyMjsDefault = parcelHelpers.interopDefault(_definePropertyMjs);
+var _stimulus = require("@hotwired/stimulus");
+const _stringParameterize = function(string) {
+    if (string) return string.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+};
+const _buildOptionGroup = function(label) {
+    const option = document.createElement("optgroup");
+    option.setAttribute("label", label);
+};
+const _buildOptionElement = function(text, attributes) {
+    const option = document.createElement("option");
+    option.innerText = text;
+    Object.entries(attributes).forEach((item)=>{
+        option.setAttribute(item[0], item[1]);
+    });
+    return option.outerHTML;
+};
+const csrfToken = document.querySelector("[name='csrf-token']").content;
+class _class extends (0, _stimulus.Controller) {
+    connect() {
+        if (this.hasScopeSelectionTarget) {
+            const existingScope = [
+                ...this.scopeSelectionTarget.options
+            ].filter((element)=>element.dataset.resourceType == this.resourceTypeValue).find((element)=>element.value == this.scopeValue);
+            if (existingScope) {
+                this.sourceUrlValue = existingScope.dataset.url;
+                if (this.hasScopeSelectionTarget) this.scopeSelectionTarget.value = existingScope.value;
+            }
+        }
+        if (this.paramsValue.id == "__index__") this.selectedResourceValue = {
+            id: this.paramsValue.id
+        };
+        this.listingOptionsUpdate();
+    }
+    resourceTypeChange(e) {
+        const selectedOption = e.target.options[e.target.selectedIndex];
+        this.resourceTypeValue = selectedOption.dataset.resourceType;
+        this.sourceUrlValue = selectedOption.dataset.url;
+        this.paramsValue = {
+            scope: e.target.value,
+            action: "index"
+        };
+        this.resourceCollectionSelectTarget.disabled = true;
+        this.resourceCollectionSelectTarget.innerHTML = "";
+    }
+    resourceChange(e) {
+        const selectedOption = e.target.options[e.target.selectedIndex];
+        this.selectedResourceValue = {
+            name: selectedOption.innerText,
+            id: e.target.value,
+            slug: selectedOption.dataset.slug
+        };
+    }
+    resourceTypeValueChanged() {
+        if (this.hasResourceTypeInputTarget) this.resourceTypeInputTarget.value = this.resourceTypeValue;
+    }
+    sourceUrlValueChanged() {
+        if (this.sourceUrlValue != "") {
+            if (this.hasResourceCollectionSelectTarget) this.resourceCollectionSelectTarget.disabled = true;
+            fetch(this.sourceUrlValue, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            }).then((res)=>res.json()).then((result)=>{
+                this.resourceCollectionSelectTarget.insertAdjacentHTML("beforeend", _buildOptionElement("", {
+                    value: ""
+                }));
+                this.resourceCollectionSelectTarget.insertAdjacentHTML("beforeend", _buildOptionElement(this.listingOptionLabelValue, {
+                    value: this.listingOptionValue
+                }));
+                const listGroup = _buildOptionGroup("List");
+                result.forEach((r)=>{
+                    this.resourceCollectionSelectTarget.insertAdjacentHTML("beforeend", _buildOptionElement(r.title, {
+                        value: r.id,
+                        "data-item-slug": r.title
+                    }));
+                });
+                if (this.selectedResourceValue == "__index__") this.resourceCollectionSelectTarget.value = "__index__";
+                else if (this.selectedResourceValue.id) this.resourceCollectionSelectTarget.value = this.selectedResourceValue.id;
+                else this.resourceCollectionSelectTarget.value = "";
+                this.resourceCollectionSelectTarget.disabled = false;
+            });
+        }
+    }
+    selectedResourceValueChanged() {
+        let resourceName = "";
+        if (this.selectedResourceValue.id == "__index__") {
+            this.showListingOptionsValue = true;
+            resourceName = `--- ${this.resourceTypeValue} listing ---`;
+        } else {
+            this.showListingOptionsValue = false;
+            resourceName = this.paramsValue.name;
+        }
+        this.dispatch("titleChange", {
+            detail: {
+                content: resourceName
+            }
+        });
+    }
+    showListingOptionsValueChanged() {
+        if (this.hasNestedChildrenWrapperTarget) this.listingOptionsUpdate();
+    }
+    listingOptionsUpdate() {
+        if (this.showListingOptionsValue == true) this.nestedChildrenWrapperTarget.style.display = "block";
+        else this.nestedChildrenWrapperTarget.style.display = "none";
+    }
+}
+(0, _definePropertyMjsDefault.default)(_class, "values", {
+    resourceType: String,
+    itemAction: String,
+    params: Object,
+    listingOption: String,
+    listingOptionLabel: String,
+    selectedResource: Object,
+    sourceUrl: String,
+    scope: String,
+    showListingOptions: Boolean,
+    showIndividualOptions: {
+        type: Boolean,
+        default: false
+    }
+});
+(0, _definePropertyMjsDefault.default)(_class, "targets", [
+    "scopeSelection",
+    "resourceCollectionSelect",
+    "nestedChildrenWrapper",
+    "nestedChildrenField",
+    "resourceTypeInput", 
+]);
+
+},{"@swc/helpers/src/_define_property.mjs":"aQ2HO","@hotwired/stimulus":"hVNih","@parcel/transformer-js/src/esmodule-helpers.js":"5oERU"}],"7U9wg":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>_class);
+var _definePropertyMjs = require("@swc/helpers/src/_define_property.mjs");
+var _definePropertyMjsDefault = parcelHelpers.interopDefault(_definePropertyMjs);
+var _stimulus = require("@hotwired/stimulus");
+const _stringParameterize = function(string) {
+    if (string) return string.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+};
+class _class extends (0, _stimulus.Controller) {
+    connect() {}
+    titleValueChanged() {
+        if (this.hasTitleTarget && this.newRecordValue) {
+            this.titleTarget.value = this.titleValue;
+            this.textTarget.value = this.titleValue;
+            this.slugTarget.value = _stringParameterize(this.titleValue);
+        }
+    }
+    updateTitle({ detail: { content  }  }) {
+        this.titleValue = content;
+    }
+}
+(0, _definePropertyMjsDefault.default)(_class, "values", {
+    title: String,
+    newRecord: Boolean
+});
+(0, _definePropertyMjsDefault.default)(_class, "targets", [
+    "title",
+    "text",
+    "slug", 
+]);
+
+},{"@swc/helpers/src/_define_property.mjs":"aQ2HO","@hotwired/stimulus":"hVNih","@parcel/transformer-js/src/esmodule-helpers.js":"5oERU"}]},["6Tm31","9vN5r"], "9vN5r", "parcelRequiref0f4")
 
 //# sourceMappingURL=kubik_navigation.js.map

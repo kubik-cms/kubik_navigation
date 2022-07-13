@@ -6,7 +6,7 @@ class CreateKubikNavigationItems < ActiveRecord::Migration[5.1]
     create_table :kubik_navigation_items do |t|
       t.string   :title
       t.string   :text
-      t.string   :description
+      t.text   :description
       t.string   :ancestry, index: true
       t.string   :slug
       t.string   :uri

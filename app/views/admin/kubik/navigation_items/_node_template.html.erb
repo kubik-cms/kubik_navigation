@@ -1,21 +1,21 @@
 <template data-navigation-selector-target='nodeTemplate'>
-  <%= f.inputs "Item look", data: { 'navigation-selector-target': 'itemLookWrapper' } do %>
+  <%= f.inputs "Item look", data: {  } do %>
     <%= f.input :title,
       input_html: {
         data: {
-          'navigation-selector-target': 'linkTitle'
+
         }
       }
     %>
     <%= f.input :slug,
       wrapper_html: {
         data: {
-          'navigation-selector-target': 'linkSlugWrapper'
+
         }
       },
       input_html: {
         data: {
-          'navigation-selector-target': 'linkSlug'
+
         }
       }
     %>
