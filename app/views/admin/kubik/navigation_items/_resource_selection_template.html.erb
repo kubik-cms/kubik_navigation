@@ -1,0 +1,45 @@
+<template data-navigation-selector-target='resourceSelectionTemplate'>
+  <%= f.inputs "Resource setup",
+    id: 'resource-setup-fieldset',
+    data: {
+  } do %>
+    <%= f.input :resource_type, as: :hidden, input_html: { data: { 'resource-setup-target': 'resourceTypeInput' } } %>
+    <%= f.input :resource_scope,
+      as: :select,
+      collection: options_for_scope_with_url(Kubik::NavigableResources.instance.select_collection),
+      input_html: {
+        data: {
+          'resource-setup-target': 'scopeSelection',
+          action: 'change->resource-setup#resourceTypeChange'
+        }
+      } %>
+    <%= f.input :resource_id,
+      as: :select,
+      collection: [],
+      include_blank: false,
+      disabled: true,
+      input_html: {
+        data: {
+          'resource-setup-target': 'resourceCollectionSelect',
+          action: 'change->resource-setup#resourceChange'
+        }
+      }
+    %>
+    <%= f.input :nested_routes,
+      label: 'Route list elements',
+      as: :boolean,
+      wrapper_html: {
+        style: 'display: none',
+        data: {
+          'resource-setup-target': 'nestedChildrenWrapper'
+        }
+      },
+      input_html: {
+        checked: ActiveModel::Type::Boolean.new.cast(f.object.params['nested_routes']),
+        data: {
+          'resource-setup-target': 'nestedChildrenField'
+        }
+      }
+    %>
+  <% end %>
+</template>

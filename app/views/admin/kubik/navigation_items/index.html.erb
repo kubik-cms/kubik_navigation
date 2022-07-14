@@ -1,0 +1,7 @@
+<div class='kubik-navigation-tree-container'>
+  <% Kubik::NavigationItem.roots.each do |root| %>
+    <ul class='kubik-navigation-list'>
+      <%= render partial: 'admin/kubik/navigation_items/node', locals: { node: root, root: root } %>
+    </ul>
+  <% end %>
+</div>

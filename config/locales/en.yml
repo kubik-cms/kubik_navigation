@@ -1,0 +1,7 @@
+en:
+  item_types:
+    resource: Resource
+    link: Link
+    header: Header
+    node: Node
+  kubik_listing_form_option_label: '--- Listing ---'

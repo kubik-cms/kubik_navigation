@@ -1,0 +1,15 @@
+<%= render 'admin/kubik/navigation_items/advanced_settings_template', f: f %>
+<%= render 'admin/kubik/navigation_items/header_template', f: f %>
+<%= render 'admin/kubik/navigation_items/link_template', f: f %>
+<%= render 'admin/kubik/navigation_items/node_template', f: f %>
+<%= render 'admin/kubik/navigation_items/resource_selection_template', f: f %>
+<%= render 'admin/kubik/navigation_items/resource_template', f: f %>
+<%= f.input :parent_id, as: :hidden, value: @resource.parent_id %>
+<%= f.inputs "Item type" do %>
+  <%= f.input :item_type,
+    as: :select,
+    collection: Kubik::Navigable::ITEM_TYPES.map {|i| [I18n.t(i, scope: [:item_types]), i]},
+    input_html: { data: { action: 'change->navigation-selector#itemTypeChange' } } %>
+<% end %>
+<div data-navigation-selector-target='fieldsContainer'></div>
+<%= f.actions %>

@@ -1,0 +1,33 @@
+<template data-navigation-selector-target='resourceTemplate'>
+  <%= f.inputs "Item look" do %>
+    <%= f.input :title,
+      input_html: {
+        data: {
+          'item-setup-target': 'title'
+        }
+      }
+    %>
+    <%= f.input :text,
+      input_html: {
+        data: {
+          'item-setup-target': 'text'
+        }
+      }
+    %>
+    <%= f.input :description %>
+    <% if Object.const_defined?('KubikMediaLibrary') %>
+      <%= f.input :navigation_image, as: 'kubik/single_media', label: 'Image' %>
+    <% end %>
+    <%= f.input :slug,
+      wrapper_html: {
+        data: {
+        }
+      },
+      input_html: {
+        data: {
+          'item-setup-target': 'slug'
+        }
+      }
+    %>
+  <% end %>
+</template>

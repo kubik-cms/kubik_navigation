@@ -1,0 +1,26 @@
+<template data-navigation-selector-target='nodeTemplate'>
+  <%= f.inputs "Item look", data: {  } do %>
+    <%= f.input :title,
+      input_html: {
+        data: {
+
+        }
+      }
+    %>
+    <% if Object.const_defined?('KubikMediaLibrary') %>
+      <%= f.input :navigation_image, as: 'kubik/single_media', label: 'Image' %>
+    <% end %>
+    <%= f.input :slug,
+      wrapper_html: {
+        data: {
+
+        }
+      },
+      input_html: {
+        data: {
+
+        }
+      }
+    %>
+  <% end %>
+</template>

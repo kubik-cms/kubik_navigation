@@ -1,6 +1,6 @@
 FROM ruby:2.7
 MAINTAINER Bart Oleszczyk <bart@primate.co.uk>
-ENV APP_PATH /kubik_metatagable/test/dummy
+ENV APP_PATH /kubik_navigation/test/dummy
 
 # Update system
 RUN apt-get -y update -qq
@@ -24,22 +24,22 @@ RUN apt-get install -y \
             libvips \
             libvips-dev \
             libvips-tools
-RUN mkdir /kubik_metatagable
+RUN mkdir /kubik_navigation
 RUN mkdir -p /vendor/bundle
 RUN gem install bundler
 
 WORKDIR /tmp
 ADD Gemfile /tmp/Gemfile
 ADD Gemfile.lock /tmp/Gemfile.lock
-ADD kubik_metatagable.gemspec /tmp/kubik_metatagable.gemspec
+ADD kubik_navigation.gemspec /tmp/kubik_navigation.gemspec
 RUN bundle install
 
-WORKDIR /kubik_metatagable
+WORKDIR /kubik_navigation
 
-ADD . /kubik_metatagable
+ADD . /kubik_navigation
 
 # YARN
-#RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-#RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-#RUN apt-get update && apt-get -y install yarn
-#RUN ./bin/yarn install
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && apt-get -y install yarn
+RUN yarn install

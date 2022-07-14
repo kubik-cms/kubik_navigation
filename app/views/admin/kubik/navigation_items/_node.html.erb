@@ -1,0 +1,47 @@
+<li data-node-id='<%= node.id %>'>
+  <div>
+    <div class='kubik-navigation-list-node'>
+      <div class='kubik-navigation-list-node-info'>
+        <% unless node.is_root? %>
+          <span class='kubik-navigation-list-node-handle'>
+            <i class='material-symbols-outlined material-icon kubik-navigation-list-node-action__primary-icon'>drag_handle</i>
+          </span>
+        <% end %>
+        <p class='kubik-navigation-list-node-title'>
+          <i class='material-symbols-outlined material-icon kubik-navigation-list-node-title-icon'><%= node.material_icon %></i>
+          <% if node.is_root? || %w{node header}.include?(node.item_type) %>
+            <%= node.title %>
+          <% else %>
+            <% if node.item_type == 'link' %>
+              <%= link_to node.title, node.link_location, target: '_blank' %>
+            <% else %>
+              <%= link_to node.title, "/#{node.uri}", target: '_blank' %>
+            <% end %>
+          <% end %>
+        </p>
+        <span class='kubik-navigation-list-node-type'>
+        <% if node.item_type == 'resource' %>
+          <%= node.node_type %>
+        <% elsif node.item_type == 'node' %>
+          <%= "/#{node.uri}" %>
+        <% else %>
+          <%= node.item_type %>
+        <% end %>
+        </span>
+      </div>
+      <div class='kubik-navigation-list-node-actions'>
+        <%= link_to 'Edit', edit_admin_kubik_navigation_item_path(node), class: 'kubik-navigation-list-node-action' %>
+        <%= link_to 'Remove', admin_kubik_navigation_item_path(node), method: :delete, class: 'kubik-navigation-list-node-action' %>
+        <%= link_to new_admin_kubik_navigation_item_path(parent_id: node.id), class: 'kubik-navigation-list-node-action__primary' do %>
+          <i class='material-symbols-outlined material-icon kubik-navigation-list-node-action__primary-icon'>add</i>
+          <span>Add child</span>
+        <% end %>
+      </div>
+    </div>
+    <ul class='kubik-navigation-list' data-drag-node-update-url-value='<%= reorder_admin_kubik_navigation_item_path(node.id) %>' data-controller='drag' data-node-id='<%= node.id %>' data-drag-navigation-group-value='<%= root.title.parameterize %>'>
+      <% node.children.order(position: :asc).each do |child| %>
+        <%= render partial: 'admin/kubik/navigation_items/node', locals: { node: child, root: root } %>
+      <% end %>
+    </ul>
+  </div>
+</li>

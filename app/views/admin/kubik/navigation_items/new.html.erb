@@ -1,0 +1,19 @@
+<div data-controller='navigation-selector resource-setup item-setup'
+     data-action="resource-setup:titleChange->item-setup#updateTitle"
+     data-navigation-selector-item-type-value='<%= @resource.item_type %>'
+     data-item-setup-title-value='<%= @resource.title %>'
+     data-item-setup-new-record-value='<%= @resource.new_record? %>'
+     data-resource-setup-resource-type-value='<%= @resource.resource_type %>'
+     data-resource-setup-item-action-value='<%= @resource.action %>'
+     data-resource-setup-params-value='<%= @resource.params.to_json %>'
+     data-resource-setup-listing-option-value='<%= Kubik::NavigationItem::LISTING_FORM_VALUE %>'
+     data-resource-setup-listing-option-label-value='<%= I18n.t(:kubik_listing_form_option_label) %>'
+     data-esource-setup-show-listing-options-value=<%= ActiveModel::Type::Boolean.new.cast(@resource.params['nested_routes']) %>
+     data-resource-setup-show-listing-options-value=<%= ActiveModel::Type::Boolean.new.cast(@resource.params['nested_routes']) %>
+     data-resource-setup-source-url-value=''
+     data-resource-setup-scope-value='<%= @resource.params['kubik_scope'] %>'
+>
+  <%= semantic_form_for @resource, url: admin_kubik_navigation_items_path, html: { data: { turbo: false } } do |f| %>
+    <%= render 'admin/kubik/navigation_items/form', f: f %>
+  <% end %>
+</div>
