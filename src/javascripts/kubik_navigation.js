@@ -1,5 +1,4 @@
 import { Application } from "@hotwired/stimulus"
-import { Turbo } from "@hotwired/turbo"
 import NavigationSelectorController from "./controllers/navigation_selector_controller.js"
 import ActiveSelectController from "./controllers/active_select_controller.js"
 import DragController from "./controllers/drag_controller.js"

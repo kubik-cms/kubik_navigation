@@ -21,6 +21,11 @@ module Kubik
     after_save :update_uri_details
     before_validation :finalise_item
 
+    if defined?(Kubik::Uploadable)
+      include Kubik::Uploadable
+      has_one_kubik_upload(self, :navigation_image)
+    end
+
     def material_icon
       case item_type
       when "resource"

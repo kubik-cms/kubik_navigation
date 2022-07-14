@@ -15,6 +15,9 @@
       }
     %>
     <%= f.input :description %>
+    <% if Object.const_defined?('KubikMediaLibrary') %>
+      <%= f.input :navigation_image, as: 'kubik/single_media', label: 'Image' %>
+    <% end %>
     <%= f.input :slug,
       wrapper_html: {
         data: {

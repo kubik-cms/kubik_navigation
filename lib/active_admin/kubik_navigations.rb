@@ -7,7 +7,9 @@ ActiveAdmin.register Kubik::NavigationItem do
     params = [:title, :item_type, :text, :description, :uri,
               :parent_id, :slug, :resource_type, :custom_class,
               :custom_id, :config_setup, :resource_id, :open_in_new_window,
-              :link_location, :rel_attribute, :nested_routes, :resource_scope]
+              :link_location, :rel_attribute, :nested_routes, :resource_scope,
+              navigation_image_attributes: [:kubik_media_upload_id, :id, :_destroy]
+    ]
     params
   end
 

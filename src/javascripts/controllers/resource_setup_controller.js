@@ -129,16 +129,16 @@ export default class extends Controller {
   }
 
   showListingOptionsValueChanged() {
-    if(this.hasNestedChildrenWrapperTarget) {
-      this.listingOptionsUpdate()
-    }
+    this.listingOptionsUpdate()
   }
 
   listingOptionsUpdate() {
-    if(this.showListingOptionsValue == true) {
-      this.nestedChildrenWrapperTarget.style.display = 'block'
-    } else {
-      this.nestedChildrenWrapperTarget.style.display = 'none'
+    if(this.hasNestedChildrenWrapperTarget) {
+      if(this.showListingOptionsValue == true) {
+        this.nestedChildrenWrapperTarget.style.display = 'block'
+      } else {
+        this.nestedChildrenWrapperTarget.style.display = 'none'
+      }
     }
   }
 }
