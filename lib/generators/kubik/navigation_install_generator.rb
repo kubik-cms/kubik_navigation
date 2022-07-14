@@ -10,6 +10,10 @@ module Kubik
       desc "Running Kubik Navigation generators"
       argument :name, type: :string, default: "kubik"
 
+      def add_initializer
+        copy_file 'config/initializers/kubik_navigation_admin_head_additions.rb', 'config/initializers/kubik_navigation_admin_head_additions.rb'
+      end
+
       def db_migrations
         migration_template "migrations/create_kubik_navigation_items.rb", "db/migrate/create_kubik_navigation_items.rb"
         puts "Database migrations added"
