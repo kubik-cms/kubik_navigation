@@ -7,3 +7,11 @@
 /pkg/
 /spec/reports/
 /tmp/
+.active_admin_sample/tmp
+.active_admin_sample/node_modules
+.active_admin_sample/public/uploads
+.active_admin_sample/log
+.active_admin_sample/config/*.key
+test/dummy/tmp
+.parcel-cache
+/node_modules
