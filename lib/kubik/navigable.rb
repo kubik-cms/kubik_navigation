@@ -23,11 +23,11 @@ module Kubik
           controller: name.tableize,
           resource_title: name.titleize,
           scopes: [
-            all: {
-              name: name,
-              label: "All #{name.downcase}",
-              source_url: source_url(name, :all),
-            }
+            Kubik::Navigable::NavigableOptions.new(
+              'all',
+              "All #{name.pluralize.downcase}",
+              source_url(name, :all),
+            )
           ]
         }.merge(opts)
         if options[:scopes].all?(Symbol)
