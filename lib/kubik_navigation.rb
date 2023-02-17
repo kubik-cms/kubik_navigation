@@ -3,12 +3,10 @@
 require "acts_as_list"
 require "ancestry"
 require "kubik/kubik_navigation"
-module KubikNavigation
-  class Error < StandardError; end
-  # Your code goes here...
-end
 
 module KubikNavigation
+  class Error < StandardError; end
+
   module Rails
     # Main engine file
     class Engine < ::Rails::Engine

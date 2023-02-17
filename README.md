@@ -21,6 +21,31 @@ Or install it yourself as:
 
 ## Usage
 
+To access one of your navigation roots, using a Kubik::NavigationFacade to safely interface with the ancestry tree.
+
+```
+@nav = Kubik::NavigationFacade.new('Main navigation')
+@nav.children
+  > [<Kubik::NavigationItem::i>...]
+
+@nav = Kubik::NavigationFacade.new('Missing navigation')
+  > # logs "WARNING - Kubik Navigation: Tried to access navigation 'Missing navigation' but it does not exist"
+@nav.children
+  > []
+```
+
+For you primary navigations you can add a `before_action` to your parent controller class or ApplicationController:
+
+```
+class KubikController < ApplicationController
+  before_action :fetch_main_navigation
+
+  def fetch_main_navigation
+     @main_navigation = NavigationFacade.new('Main navigation')
+  end
+end
+
+```
 
 
 ### ActiveAdmin setup
