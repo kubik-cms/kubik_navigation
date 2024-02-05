@@ -13,7 +13,7 @@ module Kubik
     end
 
     def check_nested_item(path)
-      Kubik::NavigationItem.where(uri: path, action: 'index').where("params->>'nested_routes' = ?", true).exists?
+      Kubik::NavigationItem.where(uri: path, action: 'index').where("params->>'nested_routes' = ?", '1').exists?
     end
 
     def check_item(path)
