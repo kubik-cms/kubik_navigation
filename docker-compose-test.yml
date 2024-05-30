@@ -6,6 +6,12 @@ volumes:
   gem_cache:
   shared_data:
 services:
+  package:
+    build:
+      context: .
+      dockerfile: Dockerfile-package
+    volumes:
+      - ./package/:/kubik_navigation
   source:
     build:
       contenxt: .

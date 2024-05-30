@@ -26,7 +26,7 @@ RUN apt-get install -y \
             libvips-tools
 RUN mkdir /kubik_navigation
 RUN mkdir -p /vendor/bundle
-RUN gem install bundler
+RUN gem install bundler -v 2.4.22
 
 WORKDIR /tmp
 ADD Gemfile /tmp/Gemfile

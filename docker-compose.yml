@@ -5,7 +5,7 @@ services:
      contenxt: .
      dockerfile: Dockerfile
    volumes:
-     - ./:/kubik_media_library
+     - ./:/kubik_navigation
    env_file: ./.env
    tty: true
    stdin_open: true

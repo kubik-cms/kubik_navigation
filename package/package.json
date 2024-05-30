@@ -1,0 +1,49 @@
+{
+  "name": "@kubik-cms/navigation",
+  "version": "0.1.4",
+  "license": "MIT",
+  "author": "Primate Inc.",
+  "type": "module",
+  "contributors": [
+    "Bart Oleszczyk <bart@primate.co.uk>"
+  ],
+  "bugs": {
+    "url": "https://github.com/kubik-cms/kubik_navigation/issues"
+  },
+  "homepage": "https://github.com/kubik-cms/kubik_navigation",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kubik-cms/kubik_navigation.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/navigation.umd.js",
+  "module": "dist/navigation.es.js",
+  "scripts": {
+    "format": "prettier-standard '**/*.{ts,css,html}' --format",
+    "lint": "prettier-standard '**/*.{ts,css,html}' --lint",
+    "dev": "vite",
+    "prod": "vite build",
+    "build": "tsc --noEmit && vite build",
+    "test": "BABEL_ENV=test jest",
+    "np": "np --no-2fa --branch master"
+  },
+  "devDependencies": {
+    "jest": "^29.0.1",
+    "np": "^10.0.5",
+    "prettier-standard": "^15.0.1",
+    "typescript": "^4.8.2",
+    "vite": "^2.7.13"
+  },
+  "peerDependencies": {
+    "@hotwired/stimulus": "^3.0.1",
+    "@hotwired/turbo": "^7.1.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "sortablejs": "^1.15.0"
+  },
+  "description": "Navigation interface for Kubik CMS"
+}
