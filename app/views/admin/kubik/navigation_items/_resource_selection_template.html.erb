@@ -1,8 +1,6 @@
 <template data-navigation-selector-target='resourceSelectionTemplate'>
   <%= f.inputs "Resource setup",
-    id: 'resource-setup-fieldset',
-    data: {
-  } do %>
+    id: 'resource-setup-fieldset' do %>
     <%= f.input :resource_type, as: :hidden, input_html: { data: { 'resource-setup-target': 'resourceTypeInput' } } %>
     <%= f.input :resource_scope,
       as: :select,
@@ -13,7 +11,7 @@
           action: 'change->resource-setup#resourceTypeChange'
         }
       } %>
-    <%= f.input :resource_id,
+    <%= f.input :resource_picker,
       as: :select,
       collection: [],
       include_blank: false,
@@ -35,11 +33,17 @@
         }
       },
       input_html: {
-        checked: ActiveModel::Type::Boolean.new.cast(f.object.params['nested_routes']),
         data: {
           'resource-setup-target': 'nestedChildrenField'
         }
       }
     %>
+    <%= f.input :path_param_keys_text,
+      label: 'Path param keys',
+      hint: 'Comma-separated keys mapped from extra URI segments when nested show is off, e.g. role' %>
+    <%= f.input :controller_params_text,
+      as: :text,
+      label: 'Baked controller params (JSON)',
+      hint: 'Merged into the listing request. Query string values win on conflict.' %>
   <% end %>
 </template>

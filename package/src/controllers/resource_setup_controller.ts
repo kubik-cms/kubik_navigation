@@ -96,7 +96,7 @@ export default class extends Controller {
         this.resourceCollectionSelectTarget.insertAdjacentHTML("beforeend", _buildOptionElement(this.listingOptionLabelValue, { value: this.listingOptionValue }))
         const listGroup = _buildOptionGroup('List')
         result.forEach(r => {
-          this.resourceCollectionSelectTarget.insertAdjacentHTML("beforeend", _buildOptionElement(r.title, { value: r.id, 'data-item-slug': r.title }))
+          this.resourceCollectionSelectTarget.insertAdjacentHTML("beforeend", _buildOptionElement(r.title, { value: r.id, 'data-item-slug': r.slug || r.title }))
         })
 
         if(this.selectedResourceValue == '__index__') {

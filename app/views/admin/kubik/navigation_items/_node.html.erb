@@ -15,7 +15,7 @@
             <% if node.item_type == 'link' %>
               <%= link_to node.title, node.link_location, target: '_blank' %>
             <% else %>
-              <%= link_to node.title, "/#{node.uri}", target: '_blank' %>
+              <%= link_to node.title, node.uri, target: '_blank' %>
             <% end %>
           <% end %>
         </p>
@@ -23,7 +23,7 @@
         <% if node.item_type == 'resource' %>
           <%= node.node_type %>
         <% elsif node.item_type == 'node' %>
-          <%= "/#{node.uri}" %>
+          <%= node.uri %>
         <% else %>
           <%= node.item_type %>
         <% end %>

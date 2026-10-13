@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Kubik
   class NavigableResources
     include Singleton
@@ -12,20 +14,24 @@ module Kubik
       @navigable_resources
     end
 
+    def find_class(class_name)
+      @navigable_resources.find { |resource| resource.class_name.to_s == class_name.to_s }
+    end
+
     def check_nested_item(path)
-      Kubik::NavigationItem.where(uri: path, action: 'index').where("params->>'nested_routes' = ?", '1').exists?
+      Kubik::NavigationResolver.nested_match?(path)
     end
 
     def check_item(path)
-      Kubik::NavigationItem.exists?(uri: path)
+      Kubik::NavigationResolver.exact_match?(path)
     end
 
     def find_nested_item(path)
-      Kubik::NavigationItem.find_by(uri: path, action: 'index')
+      Kubik::NavigationResolver.match(path)&.item
     end
 
     def find_item(path)
-      Kubik::NavigationItem.find_by(uri: path)
+      Kubik::NavigationResolver.exact_item(path)
     end
   end
 end

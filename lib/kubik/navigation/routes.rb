@@ -8,18 +8,18 @@ require "kubik/navigation/routes/registry"
 module KubikNavigation
   class NavigationConstraint
     def self.matches?(request)
-      Kubik::NavigableResources.instance.check_item(request.params[:slug])
+      Kubik::NavigationResolver.exact_match?(request.path)
     end
   end
 
   class NestedNavigationConstraint
     def self.matches?(request)
-      Kubik::NavigableResources.instance.check_nested_item(request.params[:slug])
+      Kubik::NavigationResolver.nested_match?(request.path)
     end
   end
 
   module Navigation
-    class Routes # :nodoc:
+    class Routes
       module Helper
         def use_kubik_navigation(options = {}, &block)
           KubikNavigation::Navigation::Routes.new(self, &block).generate_routes!(options)
@@ -41,9 +41,18 @@ module KubikNavigation
         super
       end
 
-      def generate_routes!(options)
-        routes.constraints(KubikNavigation::NavigationConstraint.new) do
-          routes.get '*path', to: 'kubik_navigation/navigation#not_found', via: :all
+      def generate_routes!(options = {})
+        routes.constraints(KubikNavigation::NavigationConstraint) do
+          routes.get "*slug",
+                     to: "kubik_navigation/navigation#navigate_item",
+                     as: options[:as] || :navigate,
+                     format: false
+        end
+        routes.constraints(KubikNavigation::NestedNavigationConstraint) do
+          routes.get "*slug/:id",
+                     to: "kubik_navigation/navigation#navigate_nested_item",
+                     as: options[:nested_as] || :nested_navigate,
+                     format: false
         end
       end
     end

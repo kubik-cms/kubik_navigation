@@ -1,67 +1,94 @@
-# KubikNavigation
+# Kubik Navigation
 
-Gem adding basic metatags configuration to Kubik projects.
+Named navigation trees (headers, links, nodes, and resource mounts) with catch-all routing so listings can move (`/news` → `/news-articles`) and nested URLs follow.
 
+The gem **does not require a schema change** on existing apps. Routing, listings, scopes, and canonical links dual-read the existing JSON `params` column (`id`, `kubik_scope`, `nested_routes`). URIs with or without a leading `/` both match.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+```ruby
+gem "kubik_navigation"
+```
+
+**New apps**
+
+```
+rails generate kubik:navigation:install
+rails db:migrate
+```
+
+**Existing apps** (table already present): do not re-run the create migration. Point the gem, add `use_kubik_navigation` at the **end** of `config/routes.rb`, include `Kubik::Navigable` on models.
 
 ```ruby
-gem 'kubik_navigation'
+use_kubik_navigation
+root to: "pages#show", slug: "homepage"
 ```
 
-And then execute:
+### Host models
 
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install kubik_navigation
-
-## Usage
-
-To access one of your navigation roots, using a Kubik::NavigationFacade to safely interface with the ancestry tree.
-
-```
-@nav = Kubik::NavigationFacade.new('Main navigation')
-@nav.children
-  > [<Kubik::NavigationItem::i>...]
-
-@nav = Kubik::NavigationFacade.new('Missing navigation')
-  > # logs "WARNING - Kubik Navigation: Tried to access navigation 'Missing navigation' but it does not exist"
-@nav.children
-  > []
+```ruby
+class Page < ApplicationRecord
+  include Kubik::Navigable
+  kubik_navigable scopes: %i[published]
+end
 ```
 
-For you primary navigations you can add a `before_action` to your parent controller class or ApplicationController:
+Canonical URL for a record is the nav item with `params['canonical']`, else the first matching resource item. Optional later: a `canonical_navigation_item_id` FK on the model (see upgrade docs below).
 
-```
-class KubikController < ApplicationController
-  before_action :fetch_main_navigation
+### Listing controllers
 
-  def fetch_main_navigation
-     @main_navigation = NavigationFacade.new('Main navigation')
+```ruby
+class NewsArticlesController < ApplicationController
+  def index
+    scope = current_navigation_item&.resource_scope.presence || :published
+    rel = NewsArticle.public_send(scope)
+    rel = rel.where(year: params[:year]) if params[:year].present?
+    @articles = rel
+  end
+
+  def show
+    @article = NewsArticle.published.friendly.find(params[:id])
   end
 end
-
 ```
 
+Listing params merge: baked extras on the item, extra **path** segments (`path_param_keys`), then the **GET query string** (query wins). Nested show uses one leftover segment as `:id` when “Route list elements” is on.
 
-### ActiveAdmin setup
+### Rendering menus
 
-## Development
+```ruby
+@nav = Kubik::Navigation["Main navigation"]
+@nav.children
+@nav.subtree("/news")
+item.url
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Cache key should include `Kubik::NavigationItem.cache_version`.
 
-## Contributing
+### Admin pickers / WYSIWYG
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/primate-inc/kubik_previewable. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/primate-inc/kubik_previewable/blob/master/CODE_OF_CONDUCT.md).
+```erb
+<%= f.input :cta, as: :kubik_navigable %>
+<%= f.input :navigation_item_id, as: :kubik_navigation_item %>
+```
 
-## License
+WYSIWYG: `kubikNavigableLink` stores `{ kind: item|resource|url }`. Render with `rewrite_kubik_navigable_links`.
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+## Schema upgrade (optional, later)
 
-## Code of Conduct
+Safe order — do **not** bulk-rewrite `uri` while old code may still run.
 
-Everyone interacting in the KubikPreviewable project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/primate-inc/kubik_previewable/blob/master/CODE_OF_CONDUCT.md).
+1. **This release.** Dual-read `params` + both URI slash forms. Rollback = revert the gem; database unchanged.
+2. **Expand (optional).** When only new code is deployed:
+
+   ```
+   rails generate kubik:navigation:upgrade
+   rails db:migrate
+   ```
+
+   Additive nullable columns (`resource_id`, `resource_scope`, `nested_routes`, `controller_params`, `path_param_keys`) and a copy from `params`. **Does not change `uri`.** Old and new code can still run if you keep dual-read.
+3. **Contract (optional, later).** Stop relying on `params` for those keys in a follow-up gem version. Optionally normalize `uri` to always have a leading `/` in a maintenance window. Optional FKs:
+
+   Copy `lib/generators/kubik/navigation/templates/migrations/add_canonical_navigation_item.rb` and uncomment per-table `add_reference`.
+
+Rollback of step 2: `db:rollback` of that migration after reverting any code that *requires* the columns. The gem dual-read means rollback of columns is safe while this version is running.

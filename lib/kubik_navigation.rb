@@ -20,6 +20,7 @@ module KubikNavigation
       config.to_prepare do
         ActiveSupport.on_load(:action_controller) do
           helper ::Kubik::NavigableHelper
+          include ::Kubik::NavigableController
         end
       end
     end
